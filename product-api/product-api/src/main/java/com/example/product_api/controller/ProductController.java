@@ -1,6 +1,7 @@
 package com.example.product_api.controller;
 import com.example.product_api.entity.Product;
 import com.example.product_api.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +13,12 @@ public class ProductController {
     @Autowired
     private ProductService productService;
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> product = productService.getAllProducts();
+        if (product == null|| product.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
